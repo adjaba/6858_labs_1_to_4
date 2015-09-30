@@ -40,3 +40,4 @@ envp += sprintf(envp, "SERVER_PROTOCOL=%s", sp2) + 1;
 The headers of the HTTP request can be exploited by overflowing the value buff as defined in http_request_headers(). This is via the url_decode method since it does not perform bounds checking. This is the point of attack I used in exploit-3.py
 
 url_decode(value,sp);
+
