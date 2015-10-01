@@ -70,8 +70,54 @@ rm -rf /jail/zoobar/db
 python /jail/zoobar/zoodb.py init-person
 python /jail/zoobar/zoodb.py init-transfer
 
-set_perms 50:60 770 /jail/zoobar/db
-set_perms 50:60 770 /jail/zoobar/db/person
-set_perms 50:60 660 /jail/zoobar/db/person/person.db
-set_perms 50:60 770 /jail/zoobar/db/transfer
-set_perms 50:60 660 /jail/zoobar/db/transfer/transfer.db
+# Change last 7 back to 0 when done. Used to be 50:55
+set_perms 50:55 770 /jail/zoobar/db
+set_perms 50:55 770 /jail/zoobar/db/person
+set_perms 50:55 660 /jail/zoobar/db/person/person.db
+set_perms 50:55 770 /jail/zoobar/db/transfer
+set_perms 50:55 660 /jail/zoobar/db/transfer/transfer.db
+
+# Change last 7 back to 0 when done
+set_perms 70:80 550 /jail/zoobar/media
+set_perms 70:80 440 /jail/zoobar/media/lion_awake.jpg
+set_perms 70:80 440 /jail/zoobar/media/lion_sleeping.jpg
+set_perms 70:80 440 /jail/zoobar/media/zoobar.css
+
+# set_perms 90:99 550 /jail/zoobar/*.py
+# set_perms 90:99 550 /jail/zoobar/*.pyc
+
+# set_perms 90:99 550 /jail/zoobar/auth_client.py
+# set_perms 90:99 550 /jail/zoobar/auth.py
+# set_perms 90:99 550 /jail/zoobar/auth.pyc
+# set_perms 90:99 550 /jail/zoobar/auth-server.py
+# set_perms 90:99 550 /jail/zoobar/bank.py
+# set_perms 90:99 550 /jail/zoobar/bank.pyc
+# set_perms 90:99 550 /jail/zoobar/bank-server.py
+# set_perms 90:99 550 /jail/zoobar/debug.py
+# set_perms 90:99 550 /jail/zoobar/debug.pyc
+# set_perms 90:99 550 /jail/zoobar/echo.py
+# set_perms 90:99 550 /jail/zoobar/echo.pyc
+# set_perms 90:99 550 /jail/zoobar/echo-server.py
+# set_perms 90:99 550 /jail/zoobar/index.py
+# set_perms 90:99 550 /jail/zoobar/index.pyc
+# set_perms 90:99 550 /jail/zoobar/__init__.py
+# set_perms 90:99 550 /jail/zoobar/__init__.pyc
+# set_perms 90:99 550 /jail/zoobar/login.py
+# set_perms 90:99 550 /jail/zoobar/login.pyc
+# set_perms 90:99 550 /jail/zoobar/pbkdf2.py
+# set_perms 90:99 550 /jail/zoobar/profile.py
+# set_perms 90:99 550 /jail/zoobar/profile.pyc
+# set_perms 90:99 550 /jail/zoobar/profile-server.py
+# set_perms 90:99 550 /jail/zoobar/rpclib.py
+# set_perms 90:99 550 /jail/zoobar/rpclib.pyc
+# set_perms 90:99 550 /jail/zoobar/sandboxlib.py
+# set_perms 90:99 550 /jail/zoobar/transfer.py
+# set_perms 90:99 550 /jail/zoobar/transfer.pyc
+# set_perms 90:99 550 /jail/zoobar/users.py
+# set_perms 90:99 550 /jail/zoobar/users.pyc
+# set_perms 90:99 550 /jail/zoobar/zoobarjs.py
+# set_perms 90:99 550 /jail/zoobar/zoobarjs.pyc
+# set_perms 90:99 550 /jail/zoobar/zoodb.py
+# set_perms 90:99 550 /jail/zoobar/zoodb.pyc
+
+set_perms 90:99 555 /jail/zoobar/index.cgi

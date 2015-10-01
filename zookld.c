@@ -151,15 +151,7 @@ pid_t launch_svc(CONF *conf, const char *name)
         int result = chroot(dir);
         if (result < 0)
             warnx("failed to chroot!");
-        char slash[] = "/\0";
-        chdir(slash);
-    }
-
-    if (NCONF_get_number_e(conf, name, "uid", &uid))
-    {
-        /* change real, effective, and saved uid to uid */
-        setresuid(uid, uid, uid);
-        warnx("setuid %ld", uid);
+        chdir("/\0");
     }
 
     if (NCONF_get_number_e(conf, name, "gid", &gid))
@@ -168,6 +160,14 @@ pid_t launch_svc(CONF *conf, const char *name)
         setresgid(gid, gid, gid);
         warnx("setgid %ld", gid);
     }
+    
+    if (NCONF_get_number_e(conf, name, "uid", &uid))
+    {
+        /* change real, effective, and saved uid to uid */
+        setresuid(uid, uid, uid);
+        warnx("setuid %ld", uid);
+    }
+
 
     if ((groups = NCONF_get_string(conf, name, "extra_gids")))
     {
