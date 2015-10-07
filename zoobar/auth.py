@@ -4,19 +4,19 @@ from debug import *
 import hashlib
 import random
 
-def newtoken(db, person):
-    hashinput = "%s%.10f" % (person.password, random.random())
-    person.token = hashlib.md5(hashinput).hexdigest()
-    db.commit()
-    return person.token
+def newtoken(cred_db, cred):
+    hashinput = "%s%.10f" % (cred.password, random.random())
+    cred.token = hashlib.md5(hashinput).hexdigest()
+    cred_db.commit()
+    return cred.token
 
 def login(username, password):
-    db = person_setup()
-    person = db.query(Person).get(username)
-    if not person:
+    cred_db = credential_setup()
+    cred = cred_db.query(Cred).get(username)
+    if not cred:
         return None
-    if person.password == password:
-        return newtoken(db, person)
+    if cred.password == password:
+        return newtoken(cred_db, cred)
     else:
         return None
 
@@ -27,14 +27,24 @@ def register(username, password):
         return None
     newperson = Person()
     newperson.username = username
-    newperson.password = password
+    # newperson.password = password
     db.add(newperson)
     db.commit()
-    return newtoken(db, newperson)
+    
+    cred_db = credential_setup()
+    cred = cred_db.query(Cred).get(username)
+    if cred:
+        return None
+    newcred = Cred()
+    newcred.username = username
+    newcred.password = password
+    cred_db.add(newcred)
+    cred_db.commit()
+    return newtoken(cred_db, newcred)
 
 def check_token(username, token):
-    db = person_setup()
-    person = db.query(Person).get(username)
+    db = credential_setup()
+    person = db.query(Cred).get(username)
     if person and person.token == token:
         return True
     else:

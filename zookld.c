@@ -160,14 +160,6 @@ pid_t launch_svc(CONF *conf, const char *name)
         setresgid(gid, gid, gid);
         warnx("setgid %ld", gid);
     }
-    
-    if (NCONF_get_number_e(conf, name, "uid", &uid))
-    {
-        /* change real, effective, and saved uid to uid */
-        setresuid(uid, uid, uid);
-        warnx("setuid %ld", uid);
-    }
-
 
     if ((groups = NCONF_get_string(conf, name, "extra_gids")))
     {
@@ -178,6 +170,13 @@ pid_t launch_svc(CONF *conf, const char *name)
         for (i = 0; i < ngids; i++){
             warnx("extra gid %d", gids[i]);
         }
+    }
+    
+    if (NCONF_get_number_e(conf, name, "uid", &uid))
+    {
+        /* change real, effective, and saved uid to uid */
+        setresuid(uid, uid, uid);
+        warnx("setuid %ld", uid);
     }
 
     signal(SIGCHLD, SIG_DFL);
