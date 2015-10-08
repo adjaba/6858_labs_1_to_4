@@ -50,6 +50,9 @@ def register(username, password):
 def check_token(username, token):
     db = credential_setup()
     person = db.query(Cred).get(username)
+    if person:
+        print 'in auth.py:53', person, person.token, token
+        print 'in auth.py:54', type(person.token), type(token)
     if person and person.token == token:
         return True
     else:

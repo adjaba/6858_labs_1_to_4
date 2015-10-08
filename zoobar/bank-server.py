@@ -7,11 +7,16 @@ from zoodb import *
 import rpclib
 import sys
 from debug import *
+import auth_client as auth
 
 import time
 
 class BankRpcServer(rpclib.RpcServer):
-    def rpc_transfer(self, sender, recipient, zoobars):
+    def rpc_transfer(self, sender, recipient, zoobars, token):
+        if not auth.check_token(sender, token):
+            print 'in bank-server.py:17', sender, token
+            raise ValueError()
+
         bank_db = bank_setup()
         senderp = bank_db.query(Bank).get(sender)
         recipientp = bank_db.query(Bank).get(recipient)
