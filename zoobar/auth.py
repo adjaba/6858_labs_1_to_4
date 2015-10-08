@@ -44,6 +44,7 @@ def register(username, password):
     newcred.password = pbkdf2.PBKDF2(password, salt).hexread(32) #password
     cred_db.add(newcred)
     cred_db.commit()
+
     return newtoken(cred_db, newcred)
 
 def check_token(username, token):

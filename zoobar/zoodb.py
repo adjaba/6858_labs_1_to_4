@@ -7,13 +7,14 @@ from debug import *
 PersonBase = declarative_base()
 TransferBase = declarative_base()
 CredBase = declarative_base()
+BankBase = declarative_base()
 
 class Person(PersonBase):
     __tablename__ = "person"
     username = Column(String(128), primary_key=True)
     # password = Column(String(128))
     # token = Column(String(128))
-    zoobars = Column(Integer, nullable=False, default=10)
+    # zoobars = Column(Integer, nullable=False, default=10)
     profile = Column(String(5000), nullable=False, default="")
 
 class Transfer(TransferBase):
@@ -29,7 +30,12 @@ class Cred(CredBase):
     username = Column(String(128), primary_key=True)
     password = Column(String(128))
     token = Column(String(128))
-    salt = Column(Binary()) # change column type
+    salt = Column(Binary())
+
+class Bank(BankBase):
+    __tablename__ = "bank"
+    username = Column(String(128), primary_key=True)
+    zoobars = Column(Integer, nullable=False, default=10)
 
 def dbsetup(name, base):
     thisdir = os.path.dirname(os.path.abspath(__file__))
@@ -53,6 +59,9 @@ def transfer_setup():
 def credential_setup():
     return dbsetup("cred", CredBase)
 
+def bank_setup():
+    return dbsetup("bank", BankBase)
+
 import sys
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -66,5 +75,7 @@ if __name__ == "__main__":
         transfer_setup()
     elif cmd == 'init-credential':
         credential_setup()
+    elif cmd == 'init-bank':
+        bank_setup()
     else:
         raise Exception("unknown command %s" % cmd)

@@ -27,6 +27,7 @@ class User(object):
 
     def addRegistration(self, username, password):
         token = auth.register(username, password)
+        bank.register(username) # call bank-client service
         if token is not None:
             return self.loginCookie(username, token)
         else:

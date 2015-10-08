@@ -57,7 +57,10 @@ mkdir -p /jail/usr/share/zoneinfo
 cp -r /usr/share/zoneinfo/America /jail/usr/share/zoneinfo/
 
 create_socket_dir /jail/echosvc 61010:61010 755
+# For Cred DB
 create_socket_dir /jail/authsvc 71010:71010 755
+# For bank DB
+create_socket_dir /jail/banksvc 81010:81010 755
 
 mkdir -p /jail/tmp
 chmod a+rwxt /jail/tmp
@@ -72,6 +75,8 @@ python /jail/zoobar/zoodb.py init-person
 python /jail/zoobar/zoodb.py init-transfer
 # For Cred DB
 python /jail/zoobar/zoodb.py init-credential
+# For bank DB
+python /jail/zoobar/zoodb.py init-bank
 
 # Change last 7 back to 0 when done. Used to be 50:55
 set_perms 50:55 550 /jail/zoobar/db
@@ -79,8 +84,12 @@ set_perms 50:55 770 /jail/zoobar/db/person
 set_perms 50:55 660 /jail/zoobar/db/person/person.db
 set_perms 50:55 770 /jail/zoobar/db/transfer
 set_perms 50:55 660 /jail/zoobar/db/transfer/transfer.db
+# For Cred DB
 set_perms 71010:71010 700 /jail/zoobar/db/cred
 set_perms 71010:71010 600 /jail/zoobar/db/cred/cred.db
+# For bank DB
+set_perms 81010:81010 700 /jail/zoobar/db/bank
+set_perms 81010:81010 600 /jail/zoobar/db/bank/bank.db
 
 # Change last 7 back to 0 when done
 set_perms 70:80 550 /jail/zoobar/media
