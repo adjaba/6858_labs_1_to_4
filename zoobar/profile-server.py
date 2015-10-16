@@ -10,6 +10,9 @@ import socket
 import bank
 import zoodb
 
+import auth
+# from zoodb import *
+
 from debug import *
 
 ## Cache packages that the sandboxed code might want to import
@@ -20,6 +23,11 @@ class ProfileAPIServer(rpclib.RpcServer):
     def __init__(self, user, visitor):
         self.user = user
         self.visitor = visitor
+        db = zoodb.credential_setup()
+        person = db.query(zoodb.Cred).get(self.user)
+        self.token = person.token
+        os.setgid(91011)
+        os.setuid(91011)
 
     def rpc_get_self(self):
         return self.user
@@ -48,9 +56,9 @@ class ProfileAPIServer(rpclib.RpcServer):
                }
 
     def rpc_xfer(self, target, zoobars):
-        with rpclib.client_connect('/authsvc/sock') as c:
-            token = c.call('get_token', username=self.user)
-            bank.transfer(self.user, target, zoobars, token)
+        # with rpclib.client_connect('/authsvc/sock') as c:
+        #     token = c.call('get_token', username=self.user)
+        bank.transfer(self.user, target, zoobars, self.token)
 
 def run_profile(pcode, profile_api_client):
     globals = {'api': profile_api_client}
