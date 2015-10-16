@@ -60,8 +60,14 @@ class ProfileServer(rpclib.RpcServer):
     def rpc_run(self, pcode, user, visitor):
         uid = 91010 # uid from zook.conf
 
-        userdir = '/tmp'
-
+        import base64
+        file_name_string = base64.urlsafe_b64encode(user)
+        userdir = '/tmp/' + file_name_string#''.join(x for x in user if x.isalnum())
+        if not os.path.exists(userdir):
+            os.mkdir(userdir)
+            os.chown(userdir, 91010, 55)
+        if not os.path.exists(userdir):
+            print 'Did not make userdir: ' + userdir
         (sa, sb) = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM, 0)
         pid = os.fork()
         if pid == 0:
