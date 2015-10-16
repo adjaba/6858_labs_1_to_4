@@ -48,7 +48,9 @@ class ProfileAPIServer(rpclib.RpcServer):
                }
 
     def rpc_xfer(self, target, zoobars):
-        bank.transfer(self.user, target, zoobars)
+        with rpclib.client_connect('/authsvc/sock') as c:
+            token = c.call('get_token', username=self.user)
+            bank.transfer(self.user, target, zoobars, token)
 
 def run_profile(pcode, profile_api_client):
     globals = {'api': profile_api_client}
@@ -56,7 +58,7 @@ def run_profile(pcode, profile_api_client):
 
 class ProfileServer(rpclib.RpcServer):
     def rpc_run(self, pcode, user, visitor):
-        uid = 0
+        uid = 91010 # uid from zook.conf
 
         userdir = '/tmp'
 

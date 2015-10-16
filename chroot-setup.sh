@@ -61,6 +61,8 @@ create_socket_dir /jail/echosvc 61010:61010 755
 create_socket_dir /jail/authsvc 71010:71010 755
 # For bank DB
 create_socket_dir /jail/banksvc 81010:81010 755
+# For profile service
+create_socket_dir /jail/profilesvc 0:91010 755
 
 mkdir -p /jail/tmp
 chmod a+rwxt /jail/tmp

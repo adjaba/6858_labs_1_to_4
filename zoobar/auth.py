@@ -58,3 +58,10 @@ def check_token(username, token):
     else:
         return False
 
+def get_token(username):
+    db = credential_setup()
+    person = db.query(Cred).get(username)
+    if person:
+        return person.token
+    else:
+        return False
