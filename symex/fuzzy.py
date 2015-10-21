@@ -703,12 +703,12 @@ def concolic_test(testfunc, maxiter = 100, verbose = 0):
   ## "checked" is the set of constraints we already sent to Z3 for
   ## checking.  use this to eliminate duplicate paths.
   checked = set()
-
   ## list of inputs we should try to explore.
   inputs = InputQueue()
 
   iter = 0
   while iter < maxiter and not inputs.empty():
+    # print iter
     iter += 1
 
     global concrete_values
@@ -770,6 +770,25 @@ def concolic_test(testfunc, maxiter = 100, verbose = 0):
     ##   such as if that variable turns out to be irrelevant to
     ##   the overall constraint, so be sure to preserve values
     ##   from the initial input (concrete_values).
+
+    for branch, caller in zip(cur_path_constr, cur_path_constr_callers):
+      # branch is a symbolic constraint
+      # print branch, type(branch)
+
+      # parse !branch into an AST constraint
+      branchn = sym_not(branch)
+
+      # if this AST constraint is in the set checked, skip it, otherwise add it.
+      if branchn in checked:
+        continue
+
+      # check for AST constraint via Z3
+      (ok, model) = fork_and_check(branchn)
+      # print ok, model, type(model)
+
+      # if sat, then create a new branch and add it to the set of inputs
+      if ok == z3.sat:
+        inputs.add(model, caller)
 
   if verbose > 0:
     print 'Stopping after', iter, 'iterations'
