@@ -20,8 +20,11 @@ b = z3.BitVec('b', 32)
 ##
 ## Use z3.UDiv(x, y) for unsigned division of x by y.
 ## Use z3.LShR(x, y) for unsigned (logical) right shift of x by y bits.
-u_avg = z3.UDiv(a + b, 2)
-s_avg = (a + b) / 2
+# u_avg = z3.UDiv(a + b, 2)
+u_avg = (a & b) + z3.LShR((a ^ b), 1) #z3.UDiv(a + b, 2)
+# s_avg = (a + b) / 2
+s_avg = (a & b) + ((a ^ b) >> 1)
+s_avg = s_avg + (z3.LShR(s_avg, 31) & (a ^ b))
 
 ## Do not change the code below.
 
@@ -38,16 +41,16 @@ bs33 = z3.SignExt(1, b)
 real_s_avg = z3.Extract(31, 0, (as33 + bs33) / 2)
 
 def do_check(msg, e):
-    print "Checking", msg, "using Z3 expression:"
-    print "    " + str(e).replace("\n", "\n    ")
-    solver = z3.Solver()
-    solver.add(e)
-    ok = solver.check()
-    print "  Answer for %s: %s" % (msg, ok)
+	print "Checking", msg, "using Z3 expression:"
+	print "    " + str(e).replace("\n", "\n    ")
+	solver = z3.Solver()
+	solver.add(e)
+	ok = solver.check()
+	print "  Answer for %s: %s" % (msg, ok)
 
-    if ok == z3.sat:
-        m = solver.model()
-        print "  Example solution:", m
+	if ok == z3.sat:
+		m = solver.model()
+		print "  Example solution:", m
 
 do_check("unsigned avg", u_avg != real_u_avg)
 do_check("signed avg", s_avg != real_s_avg)
