@@ -533,9 +533,6 @@ class concolic_int(int):
     res = o / self.__v
     concolic_int(sym_div(ast(o), ast(self)), res)
 
-  ## Exercise 2: your code here.
-  ## Implement symbolic division and multiplication.
-
   def _sym_ast(self):
     return self.__sym
 
@@ -571,6 +568,16 @@ class concolic_str(str):
   def __radd__(self, o):
     res = o + self.__v
     return concolic_str(sym_concat(ast(o), ast(self)), res)
+
+  def __len__(self):
+    # len of symbolic or literal?
+    return concolic_int(sym_length(ast(self)), len(self.__v))
+
+  def __contains__(self, o):
+    if isinstance(o, concolic_str):
+      return concolic_bool(sym_contains(ast(self), ast(o)), o.__v in self.__v)
+    else:
+      return concolic_bool(sym_contains(ast(self), ast(o)), o in self.__v)
 
   ## Exercise 4: your code here.
   ## Implement symbolic versions of string length (override __len__)
