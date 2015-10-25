@@ -778,16 +778,18 @@ def concolic_test(testfunc, maxiter = 100, verbose = 0):
     ##   the overall constraint, so be sure to preserve values
     ##   from the initial input (concrete_values).
 
-    for branch, caller in zip(cur_path_constr, cur_path_constr_callers):
+    for i in range(len(cur_path_constr)):
+      branch, caller = zip(cur_path_constr, cur_path_constr_callers)[i]
       # branch is a symbolic constraint
       # print branch, type(branch)
-
+      args = [sym_not(branch)] + cur_path_constr[:i]
       # parse !branch into an AST constraint
-      branchn = sym_not(branch)
+      branchn = sym_and(*args)
 
       # if this AST constraint is in the set checked, skip it, otherwise add it.
       if branchn in checked:
         continue
+      checked.add(branchn)
 
       # check for AST constraint via Z3
       (ok, model) = fork_and_check(branchn)

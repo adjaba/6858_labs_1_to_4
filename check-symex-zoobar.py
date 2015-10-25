@@ -37,6 +37,8 @@ def test_stuff():
   adduser(pdb, 'alice', 'atok')
   adduser(pdb, 'bob', 'btok')
   balance1 = sum([p.zoobars for p in pdb.query(zoobar.zoodb.Person).all()])
+  all_balances_1 = {p.username: p.zoobars for p in pdb.query(zoobar.zoodb.Person).all()}
+  people1 = sum([1 for p in pdb.query(zoobar.zoodb.Person).all()])
   pdb.commit()
 
   tdb = zoobar.zoodb.transfer_setup()
@@ -79,9 +81,36 @@ def test_stuff():
 
   ## Detect balance mismatch.
   ## When detected, call report_balance_mismatch()
+  balanceEnd = sum([p.zoobars for p in pdb.query(zoobar.zoodb.Person).all()])
+  peopleEnd = sum([1 for p in pdb.query(zoobar.zoodb.Person).all()])
+  if balance1 != balanceEnd and people1 == peopleEnd:
+    report_balance_mismatch() # detects 8
 
   ## Detect zoobar theft.
   ## When detected, call report_zoobar_theft()
+  all_balances_end = {p.username: p.zoobars for p in pdb.query(zoobar.zoodb.Person).all()}
+  if (len(all_balances_1.keys()) == len(all_balances_end.keys()) and
+      set(all_balances_1.keys()) == set(all_balances_end.keys())):
+    # same number and set of users
+    diff_balance_users = []
+    for user in all_balances_1:
+      if all_balances_1[user] != all_balances_end[user]:
+        diff_balance_users.append(user)
+        # check no txns exist
+
+    '''check all the users with different balances that they have entries in the
+    Transfer table.'''
+    tdb = zoobar.zoodb.transfer_setup()
+    for user in diff_balance_users:
+      net_balance_change = 0
+      user_transfers = tdb.query(zoobar.zoodb.Transfer).filter_by(sender=user)
+      for transfer in user_transfers:
+        net_balance_change -= transfer.amount
+      user_transfers = tdb.query(zoobar.zoodb.Transfer).filter_by(recipient=user)
+      for transfer in user_transfers:
+        net_balance_change += transfer.amount
+      if all_balances_end[user] != all_balances_1[user] + net_balance_change:
+        report_zoobar_theft() # detects 8
 
 fuzzy.concolic_test(test_stuff, maxiter=2000, verbose=1)
 
